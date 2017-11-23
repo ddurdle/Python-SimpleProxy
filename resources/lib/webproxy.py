@@ -101,20 +101,21 @@ class webProxy(BaseHTTPRequestHandler):
 
 
         # redirect url to output
-        elif re.search(r'/play', str(self.path)):
+        elif re.search(r'/http', str(self.path)):
 #            self.send_response(200)
 #            self.end_headers()
             print "PLAYBACK" + "\n\n\n"
             count = 0
-            results = re.search(r'/play\?url\=(.*)$', str(self.path))
+            results = re.search(r'/([^\/]+)/(.*)$', str(self.path))
             if results:
-                url = str(results.group(1))
+                domain = str(results.group(1))
+                parameters = str(results.group(2))
             #self.send_response(200)
             #self.end_headers()
             #xbmcplugin.assignOutputBuffer(self.wfile)
             #cookies = self.headers['Cookie']
 
-            req = urllib2.Request(url,  None)
+            req = urllib2.Request(domain + '/' + parameters,  None)
 
 
             try:
@@ -134,7 +135,7 @@ class webProxy(BaseHTTPRequestHandler):
             self.send_header('Cache-Control',response.info().getheader('Cache-Control'))
             self.send_header('Date',response.info().getheader('Date'))
             #self.send_header('Content-type','video/mp4')
-            self.send_header('Accept-Ranges','bytes')
+            #self.send_header('Accept-Ranges','bytes')
 
             self.end_headers()
 
